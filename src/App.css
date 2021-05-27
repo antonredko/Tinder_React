@@ -1,3 +1,10 @@
+@import 'antd/dist/antd.css';
+
+:root{
+  --standart_gradient: linear-gradient(to right, #EA4A7A, #FE7251);
+  --standart_gradient_hover: linear-gradient(to left, #EA4A7A, #FE7251);
+}
+
 .container {
   width: 100%;
   max-width: 600px;
@@ -8,14 +15,16 @@
   width: 100vw;
   height: 100vh;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 .from_auth {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-
 .login-form {
   max-width: 300px;
 }
@@ -27,4 +36,19 @@
 }
 .login-form-button {
   width: 100%;
+}
+div.ant-typography {
+  text-align: center;
+  margin-top: 1rem;
+}
+span.anticon {
+  color: #bfbfbf;
+}
+.ant-btn-primary{
+  background: var(--standart_gradient);
+  border: none;
+  border-radius: 20px;
+}
+.ant-btn-primary:hover, .ant-btn-primary:focus{
+  background: var(--standart_gradient_hover);
 }

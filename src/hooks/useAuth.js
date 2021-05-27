@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
-import { firebase } from '../fiebase/firebase'
+import { firebase } from '../firebase/firebase'
 
 const authContext = createContext();
 
@@ -19,7 +19,21 @@ export const useAuth = () => {
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
   const [user, setUser] = useState(null);
-  const [error, setError] = useState({})
+  // const [error, setError] = useState(null);
+
+  // function setCustomErrorText(err) {
+  //   const error = err
+  //   switch (error.code) {
+  //     case 'auth/user-not-found':
+  //       error.message = 'Користувача не знайдено!'
+  //       break
+  //     case 'auth/wrong-password':
+  //       error.message = 'Невірний пароль!'
+  //       break
+  //     default:
+  //       setError(error)
+  //   }
+  // }
 
   // Wrap any Firebase methods we want to use making sure ...
   // ... to save the user to state.
@@ -28,17 +42,15 @@ function useProvideAuth() {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((response) => {
+        // setError(null)
         setUser(response.user);
         return response.user;
       })
-      .catch(error => {
-          setError(error)
-          switch (error.code) {
-              
-              default:
-                  console.error('Undefined error!');
-          }
-      })
+      // .catch(error => {
+      //   setCustomErrorText(error)
+      //   setUser(null)
+        // return error;
+      // })
   };
 
   const signup = (email, password) => {
@@ -46,9 +58,15 @@ function useProvideAuth() {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((response) => {
+        // setError(null)
         setUser(response.user);
         return response.user;
-      });
+      })
+      // .catch(error => {
+      //   setCustomErrorText(error)
+      //   setUser(null)
+        // return error;
+      // })
   };
 
   const signout = () => {
@@ -56,8 +74,13 @@ function useProvideAuth() {
       .auth()
       .signOut()
       .then(() => {
-        setUser(false);
-      });
+        setUser(null)
+        // setError(null)
+      })
+      // .catch(error => {
+      //   setCustomErrorText(error)
+        // return error
+      // })
   };
 
   const sendPasswordResetEmail = (email) => {
@@ -98,6 +121,7 @@ function useProvideAuth() {
   // Return the user object and auth methods
   return {
     user,
+    // error,
     signin,
     signup,
     signout,

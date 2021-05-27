@@ -1,132 +1,103 @@
 import { useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { Form, Input, Button, Checkbox } from "antd";
-import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Typography } from "antd";
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
+
+const { Title, Text, Paragraph } = Typography;
 
 export default function FormAuth() {
   const auth = useAuth();
   const [formtype, setFormtype] = useState("signin");
 
-  const onFinish = (values) => {
-    console.log("Received values of form: ", values);
-  };
-
-  function FormAction(event) {
-    event.preventDefault();
-
-    const { email, password } = event.target;
+  function FormAction(values) {
+    const { email, password } = values;
 
     if (formtype === "signin") {
-      auth.signin(email.value, password.value);
+      auth.signin(email, password);
       return;
     }
     if (formtype === "signup") {
-      auth.signup(email.value, password.value);
+      auth.signup(email, password);
       return;
     }
   }
 
   return (
-    // <div className="form_block">
-    //   {!auth.user && (
-    //     <form className="from_auth" onSubmit={FormAction}>
-    //       <button
-    //         type="button"
-    //         onClick={() =>
-    //           setFormtype(formtype === "signin" ? "signup" : "signin")
-    //         }
-    //       >
-    //         {formtype === "signin" ? "SignUp" : "SignIn"}
-    //       </button>
-    //       <input type="email" name="email" placeholder="Email" />
-    //       <input type="password" name="password" placeholder="Password" />
-    //       <button type="submit">
-    //         {formtype === "signin" ? "Login" : "Registration"}
-    //       </button>
-    //     </form>
-    //   )}
-    // </div>
-
-    <div className="form_block">
-      <Form
-        name="normal_login"
-        className="login-form"
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onFinish}
-      >
-        {/* <Form.Item
-            name="username"
-            rules={[
-              {
-                required: true,
-                message: "Please input your Email!",
-                type: "email"
-              },
-            ]}
+    <>
+      {auth.user && (
+        <Button type="primary" htmlType="button" onClick={() => auth.signout()}>
+          SignOUT
+        </Button>
+      )}
+      {!auth.user && (
+        <div className="form_block">
+          <Title>{formtype === "signin" ? "SignIn" : "SignUp"}</Title>
+          <Form
+            name="normal_login"
+            className="login-form"
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={FormAction}
           >
-            <Input
-              prefix={<MailOutlined className="site-form-item-icon" />}
-              placeholder="Email"
-            />
-          </Form.Item> */}
-
-        <Form.Item
-          name="email"
-          rules={[
-            {
-              type: "email",
-              message: "The input is not valid E-mail!",
-            },
-            {
-              required: true,
-              message: "Please input your E-mail!",
-            },
-          ]}
-        >
-          <Input
-            prefix={<MailOutlined className="site-form-item-icon" />}
-            placeholder="Email"
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Please input your Password!",
-            },
-          ]}
-        >
-          <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Item>
-        <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
-          </Form.Item>
-
-          <a className="login-form-forgot" href="">
-            Forgot password
-          </a>
-        </Form.Item>
-
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="login-form-button"
-          >
-            Log in
-          </Button>
-          Or <a href="">register now!</a>
-        </Form.Item>
-      </Form>
-    </div>
+            <Form.Item
+              name="email"
+              rules={[
+                {
+                  type: "email",
+                  message: "The input is not valid E-mail!",
+                },
+                {
+                  required: true,
+                  message: "Please input your E-mail!",
+                },
+              ]}
+            >
+              <Input
+                prefix={<MailOutlined className="site-form-item-icon" />}
+                type="email"
+                placeholder="Email"
+              />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your Password!",
+                },
+              ]}
+            >
+              <Input.Password
+                prefix={<LockOutlined className="site-form-item-icon" />}
+                type="password"
+                placeholder="Password"
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="login-form-button"
+              >
+                {formtype === "signin" ? "Login" : "Registration"}
+              </Button>
+              <Paragraph>
+                <Text>Or</Text>
+                <Button
+                  type="link"
+                  htmlType="button"
+                  onClick={() =>
+                    setFormtype(formtype === "signin" ? "signup" : "signin")
+                  }
+                >
+                  {formtype === "signin" ? "SignUp" : "SignIn"}
+                </Button>
+              </Paragraph>
+            </Form.Item>
+          </Form>
+        </div>
+      )}
+    </>
   );
 }
