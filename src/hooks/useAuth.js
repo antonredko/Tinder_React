@@ -19,21 +19,28 @@ export const useAuth = () => {
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
   const [user, setUser] = useState(null);
-  // const [error, setError] = useState(null);
+  const [error, setError] = useState(null);
 
-  // function setCustomErrorText(err) {
-  //   const error = err
-  //   switch (error.code) {
-  //     case 'auth/user-not-found':
-  //       error.message = 'Користувача не знайдено!'
-  //       break
-  //     case 'auth/wrong-password':
-  //       error.message = 'Невірний пароль!'
-  //       break
-  //     default:
-  //       setError(error)
-  //   }
-  // }
+  function setCustomErrorText(err) {
+    const error = err
+
+    switch (error.code) {
+      case 'auth/user-not-found':
+        error.message = 'Обліковий запис не знайдено!'
+        break
+      case 'auth/email-already-in-use':
+        error.message = 'Email вже використовується іншим обліковим записом!'
+        break
+      case 'auth/wrong-password':
+        error.message = 'Невірний пароль!'
+        break
+      case 'auth/weak-password':
+        error.message = 'Пароль повинен містити щонайменше 6 символів!'
+        break
+      default:
+    }
+    setError(error)
+  }
 
   // Wrap any Firebase methods we want to use making sure ...
   // ... to save the user to state.
@@ -42,15 +49,15 @@ function useProvideAuth() {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((response) => {
-        // setError(null)
+        setError(null)
         setUser(response.user);
         return response.user;
       })
-      // .catch(error => {
-      //   setCustomErrorText(error)
-      //   setUser(null)
-        // return error;
-      // })
+      .catch(error => {
+        setCustomErrorText(error)
+        setUser(null)
+        return error;
+      })
   };
 
   const signup = (email, password) => {
@@ -58,15 +65,15 @@ function useProvideAuth() {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((response) => {
-        // setError(null)
+        setError(null)
         setUser(response.user);
         return response.user;
       })
-      // .catch(error => {
-      //   setCustomErrorText(error)
-      //   setUser(null)
-        // return error;
-      // })
+      .catch(error => {
+        setCustomErrorText(error)
+        setUser(null)
+        return error;
+      })
   };
 
   const signout = () => {
@@ -75,12 +82,12 @@ function useProvideAuth() {
       .signOut()
       .then(() => {
         setUser(null)
-        // setError(null)
+        setError(null)
       })
-      // .catch(error => {
-      //   setCustomErrorText(error)
-        // return error
-      // })
+      .catch(error => {
+        setCustomErrorText(error)
+        return error
+      })
   };
 
   const sendPasswordResetEmail = (email) => {
@@ -109,8 +116,8 @@ function useProvideAuth() {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         setUser(user);
-      } else {
-        setUser(false);
+      } else { 
+        setUser(null);
       }
     });
 
@@ -121,7 +128,7 @@ function useProvideAuth() {
   // Return the user object and auth methods
   return {
     user,
-    // error,
+    error,
     signin,
     signup,
     signout,

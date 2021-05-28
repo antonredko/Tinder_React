@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { Form, Input, Button, Typography } from "antd";
+import { Form, Input, Button, Typography, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-
 const { Title, Text, Paragraph } = Typography;
 
 export default function FormAuth() {
@@ -22,16 +21,31 @@ export default function FormAuth() {
     }
   }
 
+  // const success = () => {
+  //   message.success('This is a success message');
+  // };
+  
+  const error = () => {
+    message.error({
+      content: auth.error.message
+    });
+  };
+  
+  // const warning = () => {
+  //   message.warning('This is a warning message');
+  // };
+
+  useEffect(() => {
+    if (auth.error) {
+      error()
+    }
+  }, [auth.error])
+
   return (
     <>
-      {auth.user && (
-        <Button type="primary" htmlType="button" onClick={() => auth.signout()}>
-          SignOUT
-        </Button>
-      )}
       {!auth.user && (
         <div className="form_block">
-          <Title>{formtype === "signin" ? "SignIn" : "SignUp"}</Title>
+          <Title>{formtype === "signin" ? "Вхід" : "Реєстрація"}</Title>
           <Form
             name="normal_login"
             className="login-form"
@@ -45,11 +59,11 @@ export default function FormAuth() {
               rules={[
                 {
                   type: "email",
-                  message: "The input is not valid E-mail!",
+                  message: "Невалідний E-mail!",
                 },
                 {
                   required: true,
-                  message: "Please input your E-mail!",
+                  message: "Введіть E-mail!",
                 },
               ]}
             >
@@ -64,7 +78,7 @@ export default function FormAuth() {
               rules={[
                 {
                   required: true,
-                  message: "Please input your Password!",
+                  message: "Введіть пароль!",
                 },
               ]}
             >
@@ -80,10 +94,10 @@ export default function FormAuth() {
                 htmlType="submit"
                 className="login-form-button"
               >
-                {formtype === "signin" ? "Login" : "Registration"}
+                {formtype === "signin" ? "Увійти" : "Зареєструватися"}
               </Button>
               <Paragraph>
-                <Text>Or</Text>
+                <Text>або</Text>
                 <Button
                   type="link"
                   htmlType="button"
@@ -91,7 +105,7 @@ export default function FormAuth() {
                     setFormtype(formtype === "signin" ? "signup" : "signin")
                   }
                 >
-                  {formtype === "signin" ? "SignUp" : "SignIn"}
+                  {formtype === "signin" ? "Зареєструватися" : "Увійти"}
                 </Button>
               </Paragraph>
             </Form.Item>
