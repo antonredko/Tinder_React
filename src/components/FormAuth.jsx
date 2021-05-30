@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Form, Input, Button, Typography, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
+
 const { Title, Text, Paragraph } = Typography;
 
 export default function FormAuth() {
@@ -13,33 +14,31 @@ export default function FormAuth() {
 
     if (formtype === "signin") {
       auth.signin(email, password);
-      return;
     }
     if (formtype === "signup") {
       auth.signup(email, password);
-      return;
     }
   }
 
   // const success = () => {
   //   message.success('This is a success message');
   // };
-  
+
   const error = () => {
     message.error({
-      content: auth.error.message
+      content: auth.error.message,
     });
   };
-  
+
   // const warning = () => {
   //   message.warning('This is a warning message');
   // };
 
   useEffect(() => {
     if (auth.error) {
-      error()
+      error();
     }
-  }, [auth.error])
+  }, [auth.error]);
 
   return (
     <>
@@ -94,7 +93,7 @@ export default function FormAuth() {
                 htmlType="submit"
                 className="login-form-button"
               >
-                {formtype === "signin" ? "Увійти" : "Зареєструватися"}
+                {formtype === "signin" ? "Увійти" : "Створити аккаунт"}
               </Button>
               <Paragraph>
                 <Text>або</Text>
@@ -105,7 +104,7 @@ export default function FormAuth() {
                     setFormtype(formtype === "signin" ? "signup" : "signin")
                   }
                 >
-                  {formtype === "signin" ? "Зареєструватися" : "Увійти"}
+                  {formtype === "signin" ? "Створити аккаунт" : "Увійти"}
                 </Button>
               </Paragraph>
             </Form.Item>
