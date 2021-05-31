@@ -29,7 +29,7 @@ export default function FormAuth() {
   const error = (errorMess) => {
     message.error(errorMess);
   };
-  
+
   // const warning = () => {
   //   message.warning('This is a warning message');
   // };
@@ -141,7 +141,7 @@ export default function FormAuth() {
                 htmlType="submit"
                 className="login-form-button"
               >
-                {formtype === "signin" ? "Увійти" : "Зареєструватися"}
+                {formtype === "signin" ? "Увійти" : "Створити аккаунт"}
               </Button>
               <Paragraph>
                 <Text>або</Text>
@@ -152,7 +152,7 @@ export default function FormAuth() {
                     setFormtype(formtype === "signin" ? "signup" : "signin")
                   }
                 >
-                  {formtype === "signin" ? "Зареєструватися" : "Увійти"}
+                  {formtype === "signin" ? "Створити аккаунт" : "Увійти"}
                 </Button>
               </Paragraph>
             </Form.Item>
