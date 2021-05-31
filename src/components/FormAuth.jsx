@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Form, Input, Button, Typography, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
+
 const { Title, Text, Paragraph } = Typography;
 
 export default function FormAuth() {
@@ -9,26 +10,24 @@ export default function FormAuth() {
   const [formtype, setFormtype] = useState("signin");
 
   function FormAction(values) {
-    const { email, password } = values;
+    const { email, password, name, age } = values;
 
     if (formtype === "signin") {
       auth.signin(email, password);
       return;
     }
     if (formtype === "signup") {
-      auth.signup(email, password);
+      auth.signup(email, password, {name: name, age: age});
       return;
     }
   }
 
-  // const success = () => {
-  //   message.success('This is a success message');
-  // };
+  const success = (errorMess) => {
+    message.success(errorMess);
+  };
   
-  const error = () => {
-    message.error({
-      content: auth.error.message
-    });
+  const error = (errorMess) => {
+    message.error(errorMess);
   };
   
   // const warning = () => {
@@ -36,10 +35,18 @@ export default function FormAuth() {
   // };
 
   useEffect(() => {
-    if (auth.error) {
-      error()
+    if (auth.user && !auth.error) {
+      if (formtype === "signin") {
+        success(`Вхід успішний`)
+      }
+      if (formtype === "signup") {
+        success(`Реєстрація успішна`)
+      }
     }
-  }, [auth.error])
+    if (auth.error?.message) {
+      error(auth.error.message)
+    }
+  }, [auth.error, auth.user])
 
   return (
     <>
@@ -59,11 +66,11 @@ export default function FormAuth() {
               rules={[
                 {
                   type: "email",
-                  message: "Невалідний E-mail!",
+                  message: "Невалідний E-mail",
                 },
                 {
                   required: true,
-                  message: "Введіть E-mail!",
+                  message: "Введіть E-mail",
                 },
               ]}
             >
@@ -71,6 +78,7 @@ export default function FormAuth() {
                 prefix={<MailOutlined className="site-form-item-icon" />}
                 type="email"
                 placeholder="Email"
+                autoFocus
               />
             </Form.Item>
             <Form.Item
@@ -78,7 +86,7 @@ export default function FormAuth() {
               rules={[
                 {
                   required: true,
-                  message: "Введіть пароль!",
+                  message: "Введіть пароль",
                 },
               ]}
             >
@@ -88,6 +96,45 @@ export default function FormAuth() {
                 placeholder="Password"
               />
             </Form.Item>
+
+
+
+            {formtype === "signup" && 
+              <>
+                <Form.Item
+                  name="name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Введіть ім'я"
+                    }
+                  ]}
+                >
+                  <Input
+                    // prefix={<MailOutlined className="site-form-item-icon" />}
+                    type="text"
+                    placeholder="Ім'я"
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="age"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Введіть вік"
+                    }
+                  ]}
+                >
+                  <Input
+                    // prefix={<MailOutlined className="site-form-item-icon" />}
+                    type="number"
+                    placeholder="Вік"
+                  />
+                </Form.Item>
+              </>}
+
+
+
             <Form.Item>
               <Button
                 type="primary"

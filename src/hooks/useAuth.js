@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
+import { createUser } from "../firebase/dbActions";
 import { firebase } from '../firebase/firebase'
 
 const authContext = createContext();
@@ -60,13 +61,14 @@ function useProvideAuth() {
       })
   };
 
-  const signup = (email, password) => {
+  const signup = (email, password, userData) => {
     return firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((response) => {
         setError(null)
         setUser(response.user);
+        createUser({...userData, uid: response.user.uid})
         return response.user;
       })
       .catch(error => {
