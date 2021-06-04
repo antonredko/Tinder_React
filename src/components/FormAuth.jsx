@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { Form, Input, Button, Typography, message } from "antd";
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import { LockOutlined, MailOutlined, NumberOutlined, UserOutlined } from "@ant-design/icons";
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -11,42 +11,35 @@ export default function FormAuth() {
 
   function FormAction(values) {
     const { email, password, name, age } = values;
-
-    if (formtype === "signin") {
-      auth.signin(email, password);
-      return;
-    }
-    if (formtype === "signup") {
-      auth.signup(email, password, {name: name, age: age});
-      return;
-    }
-  }
-
-  const success = (errorMess) => {
-    message.success(errorMess);
-  };
   
-  const error = (errorMess) => {
-    message.error(errorMess);
-  };
-
-  // const warning = () => {
-  //   message.warning('This is a warning message');
-  // };
-
-  useEffect(() => {
-    if (auth.user && !auth.error) {
       if (formtype === "signin") {
-        success(`Вхід успішний`)
+        message.loading('Завантаження...', 2)
+          .then((response) => {
+            message.success('Успішно!', 2)
+            auth.signin(email, password)
+            console.log(response);
+          })
+          .catch(error => {
+            console.log(error);
+          })
+        return;
       }
       if (formtype === "signup") {
-        success(`Реєстрація успішна`)
+        auth.signup(email, password, {name: name, age: age});
+        return;
       }
-    }
+  }
+
+  useEffect(() => {
     if (auth.error?.message) {
-      error(auth.error.message)
+      message.error(auth.error.message, 3)
     }
-  }, [auth.error, auth.user])
+    // if (!auth.error) {
+      // message.loading('Завантаження...', 2)
+      // .then(() => {
+      //   message.success('Успішно!', 2)
+    // }
+  }, [auth.error])
 
   return (
     <>
@@ -63,41 +56,37 @@ export default function FormAuth() {
           >
             <Form.Item
               name="email"
-              rules={[
-                {
-                  type: "email",
-                  message: "Невалідний E-mail",
-                },
-                {
-                  required: true,
-                  message: "Введіть E-mail",
-                },
-              ]}
+              // rules={[
+              //   {
+              //     type: "email",
+              //     message: "Невалідний E-mail",
+              //   },
+              //   {
+              //     required: true,
+              //     message: "Введіть E-mail",
+              //   },
+              // ]}
             >
               <Input
                 prefix={<MailOutlined className="site-form-item-icon" />}
-                type="email"
                 placeholder="Email"
                 autoFocus
               />
             </Form.Item>
             <Form.Item
               name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Введіть пароль",
-                },
-              ]}
+              // rules={[
+              //   {
+              //     required: true,
+              //     message: "Введіть пароль",
+              //   },
+              // ]}
             >
               <Input.Password
                 prefix={<LockOutlined className="site-form-item-icon" />}
-                type="password"
-                placeholder="Password"
+                placeholder="Пароль"
               />
             </Form.Item>
-
-
 
             {formtype === "signup" && 
               <>
@@ -111,29 +100,19 @@ export default function FormAuth() {
                   ]}
                 >
                   <Input
-                    // prefix={<MailOutlined className="site-form-item-icon" />}
-                    type="text"
+                    prefix={<UserOutlined className="site-form-item-icon" />}
                     placeholder="Ім'я"
                   />
                 </Form.Item>
-                <Form.Item
-                  name="age"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Введіть вік"
-                    }
-                  ]}
-                >
+                <Form.Item name="age" >
                   <Input
-                    // prefix={<MailOutlined className="site-form-item-icon" />}
                     type="number"
+                    prefix={<NumberOutlined className="site-form-item-icon" />}
                     placeholder="Вік"
+                    min={0}
                   />
                 </Form.Item>
               </>}
-
-
 
             <Form.Item>
               <Button
