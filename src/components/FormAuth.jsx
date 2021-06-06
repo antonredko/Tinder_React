@@ -13,15 +13,7 @@ export default function FormAuth() {
     const { email, password, name, age } = values;
   
       if (formtype === "signin") {
-        message.loading('Завантаження...', 2)
-          .then((response) => {
-            message.success('Успішно!', 2)
-            auth.signin(email, password)
-            console.log(response);
-          })
-          .catch(error => {
-            console.log(error);
-          })
+        auth.signin(email, password)
         return;
       }
       if (formtype === "signup") {
@@ -32,13 +24,8 @@ export default function FormAuth() {
 
   useEffect(() => {
     if (auth.error?.message) {
-      message.error(auth.error.message, 3)
+      message.error(auth.error.message, 2.5)
     }
-    // if (!auth.error) {
-      // message.loading('Завантаження...', 2)
-      // .then(() => {
-      //   message.success('Успішно!', 2)
-    // }
   }, [auth.error])
 
   return (
