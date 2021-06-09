@@ -56,3 +56,19 @@ span.anticon {
 .ant-message {
   font-size: 16px;
 }
+.ant-btn-link:hover {
+  background: var(--standart_gradient);
+}
+.profile_btn {
+  display: flex;
+  align-items: center;
+  background: var(--standart_gradient);
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+}
+.ant-avatar {
+  background-color: #efeded;
+  border: 2px solid #fff;
+  margin-right: 10px;
+}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
-import { createUser } from "../firebase/useDB";
+import DbActions from "../firebase/DbActions";
 import { firebase } from "../firebase/firebase";
 
 const authContext = createContext();
@@ -21,6 +21,7 @@ export const useAuth = () => {
 function useProvideAuth() {
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const db = DbActions()
 
   function setCustomErrorText(err) {
     const error = err;
@@ -68,7 +69,7 @@ function useProvideAuth() {
       .then((response) => {
         setError(null);
         setUser(response.user);
-        createUser({...userData, uid: response.user.uid})
+        db.createUser({...userData, uid: response.user.uid})
         return response.user;
       })
       .catch((error) => {

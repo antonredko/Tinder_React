@@ -11,22 +11,31 @@ export default function FormAuth() {
 
   function FormAction(values) {
     const { email, password, name, age } = values;
-  
-      if (formtype === "signin") {
-        auth.signin(email, password)
-        return;
-      }
-      if (formtype === "signup") {
-        auth.signup(email, password, {name: name, age: age});
-        return;
-      }
+    
+    if (formtype === "signin") {
+      message.loading("Завантаження...", 1)
+        .then(() => {
+          auth.signin(email, password);
+        });
+      return;
+    }
+    if (formtype === "signup") {
+      message.loading("Завантаження...", 1)
+        .then(() => {
+          auth.signup(email, password, { name: name, age: age, email: email });
+        })
+      return;
+    }
   }
 
   useEffect(() => {
     if (auth.error?.message) {
-      message.error(auth.error.message, 2.5)
+      message.error(auth.error.message, 2);
     }
-  }, [auth.error])
+    if (auth.user) {
+      message.success("Успішно!", 1);
+    }
+  }, [auth.error, auth.user]);
 
   return (
     <>
@@ -43,16 +52,16 @@ export default function FormAuth() {
           >
             <Form.Item
               name="email"
-              // rules={[
-              //   {
-              //     type: "email",
-              //     message: "Невалідний E-mail",
-              //   },
-              //   {
-              //     required: true,
-              //     message: "Введіть E-mail",
-              //   },
-              // ]}
+              rules={[
+                {
+                  type: "email",
+                  message: "Невалідний E-mail",
+                },
+                {
+                  required: true,
+                  message: "Введіть E-mail",
+                },
+              ]}
             >
               <Input
                 prefix={<MailOutlined className="site-form-item-icon" />}
@@ -62,12 +71,12 @@ export default function FormAuth() {
             </Form.Item>
             <Form.Item
               name="password"
-              // rules={[
-              //   {
-              //     required: true,
-              //     message: "Введіть пароль",
-              //   },
-              // ]}
+              rules={[
+                {
+                  required: true,
+                  message: "Введіть пароль",
+                },
+              ]}
             >
               <Input.Password
                 prefix={<LockOutlined className="site-form-item-icon" />}
@@ -75,15 +84,15 @@ export default function FormAuth() {
               />
             </Form.Item>
 
-            {formtype === "signup" && 
+            {formtype === "signup" && (
               <>
                 <Form.Item
                   name="name"
                   rules={[
                     {
                       required: true,
-                      message: "Введіть ім'я"
-                    }
+                      message: "Введіть ім'я",
+                    },
                   ]}
                 >
                   <Input
@@ -91,7 +100,7 @@ export default function FormAuth() {
                     placeholder="Ім'я"
                   />
                 </Form.Item>
-                <Form.Item name="age" >
+                <Form.Item name="age">
                   <Input
                     type="number"
                     prefix={<NumberOutlined className="site-form-item-icon" />}
@@ -99,7 +108,8 @@ export default function FormAuth() {
                     min={0}
                   />
                 </Form.Item>
-              </>}
+              </>
+            )}
 
             <Form.Item>
               <Button
