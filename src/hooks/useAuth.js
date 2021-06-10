@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
-import DbActions from "../firebase/DbActions";
 import { firebase } from "../firebase/firebase";
+import { useDb } from "../firebase/dbActions";
 
 const authContext = createContext();
 
@@ -20,8 +20,9 @@ export const useAuth = () => {
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
   const [user, setUser] = useState(null);
+  // const [userData, setUserData] = useState(null);
   const [error, setError] = useState(null);
-  const db = DbActions()
+  const db = useDb()
 
   function setCustomErrorText(err) {
     const error = err;
@@ -53,6 +54,7 @@ function useProvideAuth() {
       .then((response) => {
         setError(null);
         setUser(response.user);
+        // setUserData(db.getUser(user))
         return response.user;
       })
       .catch((error) => {
@@ -61,15 +63,16 @@ function useProvideAuth() {
         return error;
       });
   };
-
-  const signup = (email, password, userData) => {
+  
+  const signup = (email, password, userD) => {
     return firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((response) => {
         setError(null);
         setUser(response.user);
-        db.createUser({...userData, uid: response.user.uid})
+        db.createUser({...userD, uid: response.user.uid})
+        // setUserData({...userData, uid: response.user.uid})
         return response.user;
       })
       .catch((error) => {
@@ -131,6 +134,7 @@ function useProvideAuth() {
   // Return the user object and auth methods
   return {
     user,
+    // userData,
     error,
     signin,
     signup,

@@ -1,16 +1,16 @@
 import { UserOutlined } from "@ant-design/icons";
 import { Drawer, Button, Space, Avatar } from "antd";
 import { useState } from "react";
-import DbActions from "../firebase/DbActions";
+import { useDb } from "../firebase/dbActions";
 import { useAuth } from "../hooks/useAuth";
 
 export default function Profile() {
   const [visible, setVisible] = useState(false);
   const auth = useAuth();
-  const db = DbActions();
+  const db = useDb();
 
   const showDrawer = () => {
-    db.getUser(auth.user);
+    db.getUser(auth.user)
     setVisible(true);
   };
 
@@ -21,7 +21,7 @@ export default function Profile() {
   return (
     <>
       <Space>
-        <Button className="profile_btn" type="link" block onClick={showDrawer}>
+        <Button className="profile_btn" type="link" onClick={showDrawer} block>
           <Avatar src={db.userData?.photo || <UserOutlined /> } />
           Мій профіль
         </Button>
@@ -36,11 +36,18 @@ export default function Profile() {
       >
         <p>{db.userData?.name}</p>
         <p>{db.userData?.age}</p>
+        <p>{db.userData?.email}</p>
         
-        <Button block type="primary" onClick={() => auth.signout()}>
+        <Button type="primary" onClick={() => auth.signout()} block >
           Вихід
         </Button>
-        <Button block onClick={() => db.deleteUser(db.userData)}>
+        <Button 
+          onClick={() => {
+            db.deleteUser(auth.user)
+            auth.signout()
+          }}
+          block
+        >
           Видалити профіль
         </Button>
       </Drawer>

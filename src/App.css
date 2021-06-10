@@ -1,9 +1,9 @@
 @import "antd/dist/antd.css";
 
-:root {
+/* :root {
   --standart_gradient: linear-gradient(to right, #ea4a7a, #fe7251);
   --standart_gradient_hover: linear-gradient(to left, #ea4a7a, #fe7251);
-}
+} */
 
 .container {
   width: 100%;
@@ -45,25 +45,25 @@ span.anticon {
   color: #bfbfbf;
 }
 .ant-btn-primary {
-  background: var(--standart_gradient);
+  /* background: var(--standart_gradient); */
   border: none;
   border-radius: 20px;
 }
 .ant-btn-primary:hover,
 .ant-btn-primary:focus {
-  background: var(--standart_gradient_hover);
+  /* background: var(--standart_gradient_hover); */
 }
 .ant-message {
   font-size: 16px;
 }
-.ant-btn-link:hover {
-  background: var(--standart_gradient);
+.ant-space-item .ant-btn-link:hover {
+  /* background: var(--standart_gradient); */
 }
 .profile_btn {
   display: flex;
   align-items: center;
-  background: var(--standart_gradient);
-  color: #fff;
+  /* background: var(--standart_gradient); */
+  /* color: #fff; */
   font-size: 20px;
   font-weight: 700;
 }

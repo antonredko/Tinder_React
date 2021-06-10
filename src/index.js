@@ -1,17 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { ProvideAuth } from './hooks/useAuth';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { ProvideAuth } from "./hooks/useAuth";
+import DbProvider from "./firebase/dbActions";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ProvideAuth>
-      <App />
-    </ProvideAuth>
+    <DbProvider>
+      <ProvideAuth>
+        <App />
+      </ProvideAuth>
+    </DbProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
